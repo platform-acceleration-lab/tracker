@@ -1,0 +1,4 @@
+rootProject.name = 'tracker'
+
+include 'applications:tracker'
+include 'db-migrations:tracker-migration'

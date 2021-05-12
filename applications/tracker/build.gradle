@@ -1,0 +1,42 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id "com.gorylenko.gradle-git-properties" version "2.2.4"
+	id 'java'
+}
+
+group = 'com.vmware.education'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'mysql:mysql-connector-java'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+springBoot {
+	buildInfo()
+}
+
+bootRun.environment([
+		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/tracker_dev?user=tracker&password=password",
+		"MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE": "*",
+		"MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS": "always",
+		"SERVER_SHUTDOWN": "graceful",
+])
+
+test.environment([
+		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/tracker_test?user=tracker&password=password",
+		"MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE": "*",
+		"MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS": "always",
+])
+
+test {
+	useJUnitPlatform()
+}

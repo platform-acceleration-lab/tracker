@@ -1,0 +1,38 @@
+---
+applications:
+  - name: tracker-migration
+    path: ../../../db-migrations/tracker-migration/build/libs/tracker-migration.jar
+    buildpacks:
+      - java_buildpack_offline
+    stack: cflinuxfs3
+    memory: 1G
+    disk_quota: 1G
+    instances: 1
+    health-check-type: port
+    timeout: 60
+    routes:
+      - route: tracker-migration-dev-bkable.apps.evans.pal.pivotal.io
+    services:
+      - tracker-database
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: 'info,health,flyway'
+      MANAGEMENT_HEALTH_PROBES_ENABLED: true
+  - name: tracker
+    buildpacks:
+      - java_buildpack_offline
+    stack: cflinuxfs3
+    memory: 1G
+    disk_quota: 1G
+    instances: 1
+    health-check-type: port
+    timeout: 60
+    path: ../../../applications/tracker/build/libs/tracker.jar
+    routes:
+      - route: tracker-dev-bkable.apps.evans.pal.pivotal.io
+    services:
+      - tracker-database
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: 'info,health'
+      MANAGEMENT_HEALTH_PROBES_ENABLED: true
